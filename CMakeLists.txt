@@ -1,0 +1,44 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+
+PROJECT(transport-paper)
+
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
+SET(CMAKE_CXX_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
+SET(CMAKE_C_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
+SET(CMAKE_CXX_FLAGS_DEBUG "-mavx -O3 -g")
+SET(CMAKE_C_FLAGS_DEBUG "-mavx -O3 -g")
+
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/.cpptransport-packages/share/cmake/")
+
+FIND_PACKAGE(CppTransport REQUIRED)
+
+
+INCLUDE_DIRECTORIES(
+  ${CPPTRANSPORT_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+
+ADD_CUSTOM_COMMAND(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dquad_core.h ${CMAKE_CURRENT_BINARY_DIR}/dquad_mpi.h
+  COMMAND CppTransport -v --fast ${CMAKE_CURRENT_SOURCE_DIR}/dq.model
+  DEPENDS dq.model
+  DEPENDS defaults.model
+)
+
+
+SET(
+  DQUAD_HEADERS
+  ${CMAKE_CURRENT_BINARY_DIR}/dquad_core.h
+  ${CMAKE_CURRENT_BINARY_DIR}/dquad_mpi.h
+)
+
+
+ADD_CUSTOM_TARGET(DQuadGenerator DEPENDS ${DQUAD_HEADERS})
+
+
+ADD_EXECUTABLE(convergence_test convergence_test.cpp)
+ADD_DEPENDENCIES(convergence_test DQuadGenerator)
+TARGET_LINK_LIBRARIES(convergence_test ${CPPTRANSPORT_LIBRARIES})
