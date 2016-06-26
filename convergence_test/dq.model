@@ -29,7 +29,7 @@ author "Jonathan Frazer"
    institute = "DESY, Hamburg";
  };
 
-#include "defaults.model"
+#include "../defaults.model"
 
 % set up the fields
 field phi

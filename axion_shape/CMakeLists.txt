@@ -1,0 +1,39 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+
+PROJECT(axion_shape)
+
+SET(CMAKE_CXX_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
+SET(CMAKE_C_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
+SET(CMAKE_CXX_FLAGS_DEBUG "-mavx -O3 -g")
+SET(CMAKE_C_FLAGS_DEBUG "-mavx -O3 -g")
+
+FIND_PACKAGE(CppTransport REQUIRED)
+
+
+INCLUDE_DIRECTORIES(
+  ${CPPTRANSPORT_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+
+ADD_CUSTOM_COMMAND(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/new_axion_core.h ${CMAKE_CURRENT_BINARY_DIR}/new_axion_mpi.h
+  COMMAND CppTransport -v --fast ${CMAKE_CURRENT_SOURCE_DIR}/new_axion.model
+  DEPENDS new_axion.model
+  DEPENDS ../defaults.model
+)
+
+
+SET(
+  NEW_AXION_HEADERS
+  ${CMAKE_CURRENT_BINARY_DIR}/new_axion_core.h
+  ${CMAKE_CURRENT_BINARY_DIR}/new_axion_mpi.h
+)
+
+
+ADD_CUSTOM_TARGET(NewAxionGenerator DEPENDS ${NEW_AXION_HEADERS})
+
+
+ADD_EXECUTABLE(axion_shape axion_shape.cpp)
+ADD_DEPENDENCIES(axion_shape NewAxionGenerator)
+TARGET_LINK_LIBRARIES(axion_shape ${CPPTRANSPORT_LIBRARIES})

@@ -1,5 +1,5 @@
 //
-// Created by David Seery on 07/01/2014.
+// Created by David Seery on 24/06/2016.
 // --@@
 // Copyright (c) 2016 University of Sussex. All rights reserved.
 //
@@ -39,8 +39,6 @@ void write_tasks(transport::repository<>& repo, transport::dquad_mpi<>* model)
     const double Mphi = 9E-5 * Mp;
     const double Mchi = 1E-5 * Mp;
 
-    transport::parameters<> params(Mp, { Mphi, Mchi }, model);
-
     const double phi_init = 10.0 * Mp;
     const double chi_init = 12.9 * Mp;
 
@@ -48,6 +46,7 @@ void write_tasks(transport::repository<>& repo, transport::dquad_mpi<>* model)
     const double N_pre = 17.0;
     const double N_end = 60.0;
 
+    transport::parameters<> params(Mp, { Mphi, Mchi }, model);
     transport::initial_conditions<> ics("dquad", params, { phi_init, chi_init }, N_init, N_pre);
 
     transport::zeta_threepf_task<> ztk300 = make_task(repo, ics, N_init, N_end, 3.00);
