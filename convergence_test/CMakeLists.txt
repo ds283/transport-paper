@@ -31,9 +31,9 @@ SET(
 )
 
 
-ADD_CUSTOM_TARGET(DQuadGenerator DEPENDS ${DQUAD_HEADERS})
+ADD_CUSTOM_TARGET(ConvergenceGenerator DEPENDS ${DQUAD_HEADERS})
 
 
 ADD_EXECUTABLE(convergence_test convergence_test.cpp)
-ADD_DEPENDENCIES(convergence_test DQuadGenerator)
+ADD_DEPENDENCIES(convergence_test ConvergenceGenerator)
 TARGET_LINK_LIBRARIES(convergence_test ${CPPTRANSPORT_LIBRARIES})

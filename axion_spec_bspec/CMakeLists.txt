@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-PROJECT(axion_shape)
+PROJECT(axion_spec_bspec)
 
 SET(CMAKE_CXX_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
 SET(CMAKE_C_FLAGS_RELEASE "-mavx -Ofast -DNDEBUG")
@@ -31,9 +31,9 @@ SET(
 )
 
 
-ADD_CUSTOM_TARGET(AxionShapeGenerator DEPENDS ${NEW_AXION_HEADERS})
+ADD_CUSTOM_TARGET(AxionSpecBspecGenerator DEPENDS ${NEW_AXION_HEADERS})
 
 
-ADD_EXECUTABLE(axion_shape axion_shape.cpp)
-ADD_DEPENDENCIES(axion_shape AxionShapeGenerator)
-TARGET_LINK_LIBRARIES(axion_shape ${CPPTRANSPORT_LIBRARIES})
+ADD_EXECUTABLE(axion_spec_bspec axion_spec_bspec.cpp)
+ADD_DEPENDENCIES(axion_spec_bspec AxionSpecBspecGenerator)
+TARGET_LINK_LIBRARIES(axion_spec_bspec ${CPPTRANSPORT_LIBRARIES})
