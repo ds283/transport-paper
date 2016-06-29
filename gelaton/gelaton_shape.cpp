@@ -44,21 +44,52 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
     const double N_max     = 29.1;
 
     transport::parameters<> params(M_P, { M_chi, epsilon_s }, model);
-    transport::initial_conditions<> ics("gelaton", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
+    transport::initial_conditions<> ics("gelaton-shape", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
 
     transport::basic_range<> times(N_init, N_max, 100, transport::spacing::linear);
 
 
 //    transport::basic_range<> ks(exp(0.0), exp(20.5), 500, transport::spacing::log_bottom);
-    transport::basic_range<> ks(exp(10.0), exp(20.5), 1000, transport::spacing::log_bottom);
-    transport::basic_range<> alphas(0.0, 0.0, 0, transport::spacing::linear);
-    transport::basic_range<> betas(1.0/3.0, 1.0/3.0, 0, transport::spacing::linear);
+    transport::basic_range<> ks(4E5, 4E5, 1000, transport::spacing::log_bottom);
+    transport::basic_range<> alphas(-0.98, 0.98, 98, transport::spacing::linear);
+    transport::basic_range<> betas(0.0, 0.99, 99, transport::spacing::linear);
+
+
+    struct StoragePolicy
+      {
+      public:
+        transport::storage_outcome operator()(const transport::threepf_kconfig& data) { return transport::storage_outcome::accept; }
+      };
+
+    struct TrianglePolicy
+      {
+      public:
+        bool operator()(double alpha, double beta)
+          {
+            // require only triangle condition, but *not* ordering condition
+
+            // beta should lie between 0 and 1
+            if(beta < 0.0) return false;
+            if(beta > 1.0) return false;
+
+            // alpha should lie between 1-beta and beta-1
+            if(beta - 1.0 - alpha > 1E-6) return false;
+            if(alpha - (1.0 - beta) > 1E-6) return false;
+
+            // demand that squeezing should not be too small
+            if(std::abs(1.0 - beta) < 1E-6) return false;
+            if(std::abs(1.0 + alpha + beta) < 1E-6) return false;
+            if(std::abs(1.0 - alpha + beta) < 1E-6) return false;
+
+            return true;
+          }
+      };
 
     // construct a threepf task
-    transport::threepf_alphabeta_task<> tk3("gelaton.threepf", ics, times, ks, alphas, betas);
+    transport::threepf_alphabeta_task<> tk3("gelaton-shape.threepf", ics, times, ks, alphas, betas, false, StoragePolicy(), TrianglePolicy());
     tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(6.0);
 
-    transport::zeta_threepf_task<> ztk3("gelaton.threepf-zeta", tk3);
+    transport::zeta_threepf_task<> ztk3("gelaton-shape.threepf-zeta", tk3);
 
     repo.commit(ztk3);
   }

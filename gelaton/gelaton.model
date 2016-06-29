@@ -44,10 +44,10 @@ background
  };
 
 perturbations
- { abserr   = 1E-15;
-   relerr   = 1E-15;
+ { abserr   = 1E-18;
+   relerr   = 1E-18;
    stepsize = 1E-15;
-   stepper  = "bulirsch_stoer_dense_out";
+   stepper  = "runge_kutta_dopri5";
  };
 
 % set up the fields

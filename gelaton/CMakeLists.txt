@@ -37,3 +37,8 @@ ADD_CUSTOM_TARGET(GelatonGenerator DEPENDS ${GELATON_HEADERS})
 ADD_EXECUTABLE(gelaton gelaton.cpp)
 ADD_DEPENDENCIES(gelaton GelatonGenerator)
 TARGET_LINK_LIBRARIES(gelaton ${CPPTRANSPORT_LIBRARIES})
+
+
+ADD_EXECUTABLE(gelaton_shape gelaton_shape.cpp)
+ADD_DEPENDENCIES(gelaton_shape GelatonGenerator)
+TARGET_LINK_LIBRARIES(gelaton_shape ${CPPTRANSPORT_LIBRARIES})
