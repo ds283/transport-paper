@@ -227,8 +227,7 @@ transport::zeta_threepf_task<> make_task(transport::repository<>& repo, transpor
     zeta_task_desc << "Zeta 3pf task associated with " << task_name.str() << " - " << efolds_ics << " e-folds";
 
     transport::threepf_alphabeta_task<> tk3(task_name.str(), ics, ts, kts, alphas, betas);
-    tk3.set_adaptive_ics_efolds(efolds_ics);
-    tk3.set_description(task_desc.str());
+    tk3.set_adaptive_ics_efolds(efolds_ics).set_description(task_desc.str());
 
     transport::zeta_threepf_task<> ztk3(zeta_task_name.str(), tk3);
     ztk3.set_description(zeta_task_desc.str());

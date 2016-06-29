@@ -87,8 +87,7 @@ void write_tasks(transport::repository<>& repo, transport::new_axion_mpi<>* mode
 
     // construct a threepf task
     transport::threepf_alphabeta_task<> tk3("axion_shape.threepf", ics, times, ks, alphas, betas, false, StoragePolicy(), TrianglePolicy());
-    tk3.set_adaptive_ics_efolds(4.0);
-    tk3.set_collect_initial_conditions(true);
+    tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(4.0);
 
     // construct a zeta threepf task, paired with the primary integration task
     transport::zeta_threepf_task<> ztk3("axion_shape.threepf-zeta", tk3);
