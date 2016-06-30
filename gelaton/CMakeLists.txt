@@ -20,7 +20,6 @@ ADD_CUSTOM_COMMAND(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gelaton_core.h ${CMAKE_CURRENT_BINARY_DIR}/gelaton_mpi.h
   COMMAND CppTransport -v --fast ${CMAKE_CURRENT_SOURCE_DIR}/gelaton.model
   DEPENDS gelaton.model
-  DEPENDS ../defaults.model
 )
 
 

@@ -1,0 +1,105 @@
+model "Gao"
+ { name        = "Gao, Langlois & Mizuno model with heavy field";
+   description = "An inflationary valley with an ajustable sharp turn";
+   citeguide   = "model taken from arXiv:1205.5275";
+   license     = "CC BY";
+   revision    = 1;
+
+   references  = [ "arXiv:1205.5275" ];
+   urls        = [  ];
+ };
+
+author "David Seery"
+ { email     = "D.Seery@sussex.ac.uk";
+   institute = "University of Sussex";
+ };
+
+author "David Mulryne"
+ { email     = "D.Mulryne@qmul.ac.uk";
+   institute = "Queen Mary, University of London";
+ };
+
+author "Mafalda Dias"
+ { email     = "M.Dias@desy.de";
+   institute = "DESY, Hamburg";
+ };
+
+author "Jonathan Frazer"
+ { email     = "J.Frazer@desy.de";
+   institute = "DESY, Hamburg";
+ };
+
+% specify which class template should be used with this model
+templates
+ { core           = "canonical_core";
+   implementation = "canonical_mpi";
+ };
+
+% fix properties of the steppers
+background
+ { abserr   = 1E-12;
+   relerr   = 1E-12;
+   stepsize = 1E-10;
+   stepper  = "runge_kutta_dopri5";
+ };
+
+perturbations
+ { abserr   = 1E-12;
+   relerr   = 1E-12;
+   stepsize = 1E-15;
+   stepper  = "runge_kutta_dopri5";
+ };
+
+% set up the fields
+field phi
+ { latex = "\phi";
+ };
+
+field chi
+ { latex = "\chi";
+ };
+
+% set up the parameters of the model
+parameter M
+ { latex = "M";
+ };
+
+parameter mphi
+ { latex = "m_\phi";
+ };
+
+parameter deltaTheta
+ { latex = "\Delta\Theta";
+ };
+
+parameter phi0
+ { latex = "phi_0";
+ };
+
+parameter s
+ { latex = "s";
+ };
+
+parameter pi
+ { latex = "\pi";
+ };
+
+% set up the potential
+% note that 'M_P' is a predefined symbol which resolves to the (user-specified) Planck mass at runtime
+
+subexpr Xi
+ { latex = "\Xi";
+   value = (deltaTheta/pi) * atan(s*(phi-phi0) / M_P^2);
+ };
+
+subexpr V1
+ { latex = "V_1";
+   value = (1/2) * M^2 * cos(deltaTheta/2)^2 * (chi - (phi-phi0)*tan(Xi))^2;
+ };
+
+subexpr V2
+ { latex = "V_2";
+   value = (1/2) * mphi^2 * phi^2;
+ };
+
+potential = V1 + V2;
