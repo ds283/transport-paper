@@ -42,3 +42,8 @@ TARGET_LINK_LIBRARIES(gelaton ${CPPTRANSPORT_LIBRARIES})
 ADD_EXECUTABLE(gelaton_shape gelaton_shape.cpp)
 ADD_DEPENDENCIES(gelaton_shape GelatonGenerator)
 TARGET_LINK_LIBRARIES(gelaton_shape ${CPPTRANSPORT_LIBRARIES})
+
+
+ADD_EXECUTABLE(gelaton_history gelaton_history.cpp)
+ADD_DEPENDENCIES(gelaton_history GelatonGenerator)
+TARGET_LINK_LIBRARIES(gelaton_history ${CPPTRANSPORT_LIBRARIES})
