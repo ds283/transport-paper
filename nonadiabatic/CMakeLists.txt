@@ -36,3 +36,8 @@ ADD_CUSTOM_TARGET(NonAdiabaticGenerator DEPENDS ${NONADIABATIC_HEADERS})
 ADD_EXECUTABLE(nonadiabatic nonadiabatic.cpp)
 ADD_DEPENDENCIES(nonadiabatic NonAdiabaticGenerator)
 TARGET_LINK_LIBRARIES(nonadiabatic ${CPPTRANSPORT_LIBRARIES})
+
+
+ADD_EXECUTABLE(nonadiabatic_history nonadiabatic_history.cpp)
+ADD_DEPENDENCIES(nonadiabatic_history NonAdiabaticGenerator)
+TARGET_LINK_LIBRARIES(nonadiabatic_history ${CPPTRANSPORT_LIBRARIES})
