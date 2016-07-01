@@ -57,16 +57,18 @@ void write_tasks(transport::repository<>& repo, transport::Gao_mpi<>* model)
     transport::parameters<> params(M_P, { Mass, mphi, deltaTheta, phi0, s, pi }, model);
     transport::initial_conditions<> ics("nonadiabatic", params, { phi_init, chi_init, dphi_init, dchi_init }, N_init, N_pre);
 
-    transport::basic_range<> times(N_init, N_max, 100000, transport::spacing::linear);
+    transport::basic_range<> times(N_init, N_max, 100, transport::spacing::linear);
 
 
-    transport::basic_range<> k(1.0, 1.0, 0, transport::spacing::linear);
+    transport::basic_range<> k(std::exp(-1.0), std::exp(9.0), 1000, transport::spacing::log_bottom);
 
     // construct a twopf task for this single mode
-    transport::twopf_task<> tk2("nonadiabatic.history", ics, times, k);
-    tk2.set_adaptive_ics_efolds(4.0);
+    transport::twopf_task<> tk2("nonadiabatic.spectrum", ics, times, k);
+    tk2.set_adaptive_ics_efolds(5.5);
 
-    repo.commit(tk2);
+    transport::zeta_twopf_task<> ztk2("nonadiabatic.spectrum-zeta", tk2);
+
+    repo.commit(ztk2);
   }
 
 
