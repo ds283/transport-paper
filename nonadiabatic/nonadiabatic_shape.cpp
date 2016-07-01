@@ -24,33 +24,44 @@
 //
 
 #include "transport-runtime/transport.h"
-#include "gelaton_mpi.h"
+#include "Gao_mpi.h"
 
 
-void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model);
+void write_tasks(transport::repository<>& repo, transport::Gao_mpi<>* model);
 
 
-void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
+void write_tasks(transport::repository<>& repo, transport::Gao_mpi<>* model)
   {
-    const double M_P       = 1.0;
-    const double M_chi     = std::sqrt(10.0) * M_P;
-    const double epsilon_s = 10.0;
+    constexpr double M_P        = 1.0;
 
-    const double x_init    = -2.0 * M_P;
-    const double y_init    = 1E-4 * M_P;
+    constexpr double shift1     = 231 * M_P;
+    constexpr double shift2     = 231 * M_P;
 
-    const double N_init    = 0.0;
-    const double N_pre     = 8.0;
-    const double N_max     = 29.1;
+    constexpr double Mass       = 1e-4 * M_P;
+    constexpr double mphi       = 1e-7 * M_P;
+    constexpr double deltaTheta = M_PI / 10.0;
+    const     double phi0       = (-100.0 * std::sqrt(6.0)) * M_P + shift1;
+    const     double s          = (1000.0 * std::sqrt(3.0)) * M_P;
+    constexpr double pi         = M_PI;
 
-    transport::parameters<> params(M_P, { M_chi, epsilon_s }, model);
-    transport::initial_conditions<> ics("gelaton-shape", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
+    const     double phi_init   = (-2.0-100.0*std::sqrt(6.0)) * M_P + shift2;
+    const     double chi_init   = (2.0*std::tan(M_PI/20.0)) * M_P;
+    constexpr double dphi_init  = 0.0;
+    constexpr double dchi_init  = 0.0;
+
+    constexpr double N_init  = 0.0;
+    constexpr double N_pre   = 14.0;
+    constexpr double N_max   = 52.0;
+
+
+    transport::parameters<> params(M_P, { Mass, mphi, deltaTheta, phi0, s, pi }, model);
+    transport::initial_conditions<> ics("nonadiabatic", params, { phi_init, chi_init, dphi_init, dchi_init }, N_init, N_pre);
 
     transport::basic_range<> times(N_init, N_max, 100, transport::spacing::linear);
 
 
-//    transport::basic_range<> ks(exp(0.0), exp(20.5), 500, transport::spacing::log_bottom);
-    transport::basic_range<> ks(4E5, 4E5, 0, transport::spacing::log_bottom);
+    // equilateral configuration with k_t = 1085.7214761859204 has redbsp ~ 205
+    transport::basic_range<> ks(1085.7214761859204, 1085.7214761859204, 0, transport::spacing::log_bottom);
     transport::basic_range<> alphas(-0.98, 0.98, 98, transport::spacing::linear);
     transport::basic_range<> betas(0.0, 0.99, 99, transport::spacing::linear);
 
@@ -86,10 +97,10 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
       };
 
     // construct a threepf task
-    transport::threepf_alphabeta_task<> tk3("gelaton-shape.threepf", ics, times, ks, alphas, betas, false, StoragePolicy(), TrianglePolicy());
-    tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(6.0);
+    transport::threepf_alphabeta_task<> tk3("nonadiabatic-shape.threepf", ics, times, ks, alphas, betas, false, StoragePolicy(), TrianglePolicy());
+    tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(5.5);
 
-    transport::zeta_threepf_task<> ztk3("gelaton-shape.threepf-zeta", tk3);
+    transport::zeta_threepf_task<> ztk3("nonadiabatic-shape.threepf-zeta", tk3);
 
     repo.commit(ztk3);
   }
@@ -101,7 +112,7 @@ int main(int argc, char* argv[])
     transport::task_manager<> mgr(argc, argv);
 
     // create model instance
-    std::shared_ptr< transport::gelaton_mpi<> > model = mgr.create_model< transport::gelaton_mpi<> >();
+    std::shared_ptr< transport::Gao_mpi<> > model = mgr.create_model< transport::Gao_mpi<> >();
 
     // write tasks to repository
     mgr.add_generator([=](transport::repository<>& repo) -> void { write_tasks(repo, model.get()); });

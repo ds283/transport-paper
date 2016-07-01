@@ -46,3 +46,8 @@ TARGET_LINK_LIBRARIES(nonadiabatic_history ${CPPTRANSPORT_LIBRARIES})
 ADD_EXECUTABLE(nonadiabatic_spectrum nonadiabatic_spectrum.cpp)
 ADD_DEPENDENCIES(nonadiabatic_spectrum NonAdiabaticGenerator)
 TARGET_LINK_LIBRARIES(nonadiabatic_spectrum ${CPPTRANSPORT_LIBRARIES})
+
+
+ADD_EXECUTABLE(nonadiabatic_shape nonadiabatic_shape.cpp)
+ADD_DEPENDENCIES(nonadiabatic_shape NonAdiabaticGenerator)
+TARGET_LINK_LIBRARIES(nonadiabatic_shape ${CPPTRANSPORT_LIBRARIES})
