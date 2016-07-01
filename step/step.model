@@ -1,0 +1,78 @@
+model "step"
+ { name        = "Tanh-like step model from Chen, Easther and Lim";
+   description = "A single-field model with a step-like feature";
+   citeguide   = "model taken from arXiv:0801.3295";
+   license     = "CC BY";
+   revision    = 1;
+
+   references  = [ "arXiv:0801.3295" ];
+   urls        = [  ];
+ };
+
+author "David Seery"
+ { email     = "D.Seery@sussex.ac.uk";
+   institute = "University of Sussex";
+ };
+
+author "David Mulryne"
+ { email     = "D.Mulryne@qmul.ac.uk";
+   institute = "Queen Mary, University of London";
+ };
+
+author "Mafalda Dias"
+ { email     = "M.Dias@desy.de";
+   institute = "DESY, Hamburg";
+ };
+
+author "Jonathan Frazer"
+ { email     = "J.Frazer@desy.de";
+   institute = "DESY, Hamburg";
+ };
+
+% specify which class template should be used with this model
+templates
+ { core           = "canonical_core";
+   implementation = "canonical_mpi";
+ };
+
+% fix properties of the steppers
+background
+ { abserr   = 1E-12;
+   relerr   = 1E-12;
+   stepsize = 1E-10;
+   stepper  = "runge_kutta_dopri5";
+ };
+
+perturbations
+ { abserr   = 1E-14;
+   relerr   = 1E-14;
+   stepsize = 1E-15;
+   stepper  = "runge_kutta_dopri5";
+ };
+
+% set up the fields
+field phi
+ { latex = "\phi";
+ };
+
+% set up the parameters of the model
+parameter m
+ { latex = "m";
+ };
+
+parameter c
+ { latex = "c";
+ };
+
+parameter d
+ { latex = "d";
+ };
+
+parameter phi0
+ { latex = "phi_0";
+ };
+
+% set up the potential
+% note that 'M_P' is a predefined symbol which resolves to the (user-specified) Planck mass at runtime
+
+potential = (1/2) * m^2 * phi^2 * (1 + c*tanh( (phi-phi0)/d ) );
