@@ -112,7 +112,7 @@ void write_tasks(transport::repository<>& repo, transport::dquad_mpi<>* model)
     vis_toolkit::zeta_threepf_wavenumber_series<> z475(ztk475, last_time, all_threepfs);
     vis_toolkit::cost_wavenumber<> cost475(*dynamic_cast< transport::threepf_task<>* >(ztk475.get_parent_task()), all_threepfs);
     z475.set_use_kt_label(true).set_use_alpha_label(true).set_use_beta_label(true).set_label_text("475", "475");
-    cost475.set_label_text("474", "474");
+    cost475.set_label_text("475", "475");
 
     vis_toolkit::zeta_threepf_wavenumber_series<> z500(ztk500, last_time, all_threepfs);
     vis_toolkit::cost_wavenumber<> cost500(*dynamic_cast< transport::threepf_task<>* >(ztk500.get_parent_task()), all_threepfs);
