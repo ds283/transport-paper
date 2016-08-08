@@ -60,12 +60,37 @@ field y
  };
 
 % set up the parameters
-parameter M_chi
- { latex = "M_\chi";
+parameter eta_chi
+ { latex = "\eta_\chi";
+ };
+
+parameter g_chi
+ { latex = "g_\chi";
  };
 
 parameter epsilon_s
  { latex = "\epsilon_s";
  };
 
-potential = (1E-10) * (10*M_P^4 - sqrt(2*epsilon_s)*M_P^4 * atan(x/y) + (1/2) * M_chi^2 * (sqrt(x^2 + y^2)-2*M_P)^2);
+subexpr uplift
+ { latex = "V_0";
+   value = 10;
+ };
+
+subexpr angular_tilt
+ { latex = "V_\theta";
+   value = - sqrt(2*epsilon_s) * atan(x/y);
+ };
+
+subexpr radial_mass
+ { latex = "V_{R^2}";
+   value = (1/2) * eta_chi * (sqrt(x^2 + y^2)/M_P^2 - 2)^2;
+ };
+
+subexpr radial_cubic
+ { latex = "V_{R^3}";
+%   value = (1/6) * g_chi * exp(-(sqrt(x^2 + y^2)-2)^2 / 0.0001) * (sqrt(x^2 + y^2)/M_P^2 - 2)^3;
+   value = (1/6) * g_chi * (sqrt(x^2 + y^2)/M_P^2 - 2)^3;
+ };
+
+potential = (1E-10 * M_P^4) * (uplift + angular_tilt + radial_mass + radial_cubic);

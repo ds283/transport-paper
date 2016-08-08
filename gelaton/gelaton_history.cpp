@@ -33,7 +33,8 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
 void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
   {
     const double M_P       = 1.0;
-    const double M_chi     = std::sqrt(10.0) * M_P;
+    const double eta_chi   = 10.0;
+    const double g_chi     = 3.2E5;
     const double epsilon_s = 10.0;
 
     const double x_init    = -2.0 * M_P;
@@ -42,8 +43,8 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
     const double N_init    = 0.0;
     const double N_pre     = 4.0;
     const double N_max     = 29.1;
-
-    transport::parameters<> params(M_P, { M_chi, epsilon_s }, model);
+    
+    transport::parameters<> params(M_P, { eta_chi, g_chi, epsilon_s }, model);
     transport::initial_conditions<> ics("gelaton", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
 
     transport::basic_range<> times(N_init, N_max, 500, transport::spacing::linear);
@@ -58,6 +59,7 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
 
     repo.commit(tk2);
   }
+
 
 
 int main(int argc, char* argv[])
