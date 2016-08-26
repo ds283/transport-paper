@@ -1,11 +1,11 @@
 model "gelaton"
- { name        = "Gelaton-like semicircle trajectory";
-   description = "Gelaton-like model in Cartesian coordinates";
+ { name        = "Gelaton/QSFI-like semicircle trajectory";
+   description = "Gelaton/QSFI-like model in Cartesian coordinates";
    citeguide   = "CppTransport user guide arXiv:16xx.yyyy";
    license     = "CC BY";
    revision    = 1;
 
-   references  = [ "arXiv:16xx.yyyyy" ];
+   references  = [ "arXiv:0910.1853", "arXiv:0911.3380", "arXiv:1010.3693", "arXiv:1205.0160", "arXiv:16xx.yyyyy" ];
    urls        = [ "http://transportmethod.com" ];
  };
 
@@ -44,8 +44,8 @@ background
  };
 
 perturbations
- { abserr   = 1E-18;
-   relerr   = 1E-18;
+ { abserr   = 1E-14;
+   relerr   = 1E-14;
    stepsize = 1E-15;
    stepper  = "runge_kutta_dopri5";
  };
@@ -60,12 +60,59 @@ field y
  };
 
 % set up the parameters
-parameter M_chi
- { latex = "M_\chi";
+
+parameter R_0
+ { latex = "R_0";
  };
 
-parameter epsilon_s
- { latex = "\epsilon_s";
+parameter V_0
+ { latex = "V_0";
  };
 
-potential = (1E-10) * (10*M_P^4 - sqrt(2*epsilon_s)*M_P^4 * atan(x/y) + (1/2) * M_chi^2 * (sqrt(x^2 + y^2)-2*M_P)^2);
+parameter eta_R
+ { latex = "\eta_R";
+ };
+
+parameter g_R
+ { latex = "g_R";
+ };
+
+parameter lambda_R
+ { latex = "\lambda_R";
+ };
+
+parameter alpha
+ { latex = "\alpha";
+ };
+
+subexpr R
+ { latex = "R";
+   value = sqrt(x^2 + y^2);
+ };
+
+subexpr uplift
+ { latex = "V_{\Lambda}";
+   value = 1;
+ };
+
+subexpr angular_tilt
+ { latex = "V_{\theta}";
+   value = alpha * atan2(y,x);
+ };
+
+subexpr radial_mass
+ { latex = "V_{R^2}";
+   value = (1/2) * eta_R * (R - R_0)^2 / M_P^2;
+ };
+
+subexpr radial_cubic
+ { latex = "V_{R^3}";
+   value = (1/6) * g_R * (R - R_0)^3 / M_P^3;
+ };
+
+subexpr radial_quartic
+ { latex = "V_{R^3}";
+   value = (1/24) * lambda_R * (R - R_0)^4 / M_P^4;
+ };
+
+potential = V_0 * (uplift + angular_tilt + radial_mass + radial_cubic + radial_quartic);

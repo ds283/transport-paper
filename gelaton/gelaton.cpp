@@ -32,35 +32,84 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
 
 void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
   {
-    const double M_P       = 1.0;
-    const double M_chi     = std::sqrt(10.0) * M_P;
-    const double epsilon_s = 10.0;
+    const double M_P           = 1.0;
+    const double P_zeta        = 1E-9;                                                          // desired amplitude of fluctuations
+    const double omega         = M_PI / 30.0;                                                   // try to get round pi radians in ~ 30 e-folds
+    
+    const double V0            = 0.1 * P_zeta * M_P*M_P*M_P*M_P;                                // adjust uplift to get sufficient inflation
+    const double eta_R         = 1.0/std::sqrt(3.0);                                            // adjust radial mass to be of order Hubble
+    const double g_R           = M_P*M_P / std::sqrt(V0);                                       // adjust radial cubic coupling to be of order Hubble
+    const double lambda_R      = 0.5 * M_P*M_P*M_P / std::pow(V0, 3.0/4.0) / std::sqrt(omega);  // adjust radial quartic coupling to dominate the displacement
+      
+    const double alpha         = 7.25*omega;                                                    // adjust angular tilt to get desired omega
+    
+    const double R0            = std::sqrt(V0/3.0) / (M_P * omega * std::sqrt(P_zeta));         // adjust radial minimum to give desired P_zeta normalization
 
-    const double x_init    = -2.0 * M_P;
-    const double y_init    = 1E-4 * M_P;
+    const double x_init        = -R0;
+    const double y_init        = (1E-2)*R0;
 
-    const double N_init    = 0.0;
-    const double N_pre     = 8.0;
-    const double N_max     = 29.1;
-
-    transport::parameters<> params(M_P, { M_chi, epsilon_s }, model);
+    const double N_init        = 0.0;
+    const double N_pre         = 8.0;
+    const double N_max         = 28.0;
+    
+    transport::parameters<> params(M_P, { R0, V0, eta_R, g_R, lambda_R, alpha }, model);
     transport::initial_conditions<> ics("gelaton", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
 
-    transport::basic_range<> times(N_init, N_max, 100, transport::spacing::linear);
-
-
-//    transport::basic_range<> ks(exp(0.0), exp(20.5), 500, transport::spacing::log_bottom);
-    transport::basic_range<> ks(exp(10.0), exp(20.5), 1000, transport::spacing::log_bottom);
+    transport::basic_range<> times(N_init, N_max, 500, transport::spacing::linear);
+    
+    transport::basic_range<> ks(exp(10.0), exp(18.5), 1000, transport::spacing::log_bottom);
+    transport::basic_range<> kts(exp(10.0), exp(17.0), 100, transport::spacing::log_bottom);
     transport::basic_range<> alphas(0.0, 0.0, 0, transport::spacing::linear);
     transport::basic_range<> betas(1.0/3.0, 1.0/3.0, 0, transport::spacing::linear);
 
+    // construct a twopf task
+    transport::twopf_task<> tk2("gelaton.twopf", ics, times, ks);
+    tk2.set_collect_initial_conditions(true).set_adaptive_ics_efolds(5.0);
+    
     // construct a threepf task
-    transport::threepf_alphabeta_task<> tk3("gelaton.threepf", ics, times, ks, alphas, betas);
-    tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(6.0);
+    transport::threepf_alphabeta_task<> tk3("gelaton.threepf", ics, times, kts, alphas, betas);
+    tk3.set_collect_initial_conditions(true).set_adaptive_ics_efolds(5.0);
 
+    transport::zeta_twopf_task<> ztk2("gelaton.twopf-zeta", tk2);
     transport::zeta_threepf_task<> ztk3("gelaton.threepf-zeta", tk3);
+    
+    ztk2.set_paired(true);
+    ztk3.set_paired(true);
+    
+    vis_toolkit::SQL_time_query tquery("1=1");
+    vis_toolkit::SQL_twopf_query k2query("comoving IN (SELECT MAX(comoving) FROM twopf_samples UNION SELECT MIN(comoving) FROM twopf_samples)");
+    vis_toolkit::SQL_threepf_query k3query("kt_comoving IN (SELECT MAX(kt_comoving) FROM threepf_samples UNION SELECT MIN(kt_comoving) FROM threepf_samples)");
+    
+    vis_toolkit::zeta_twopf_time_series<> z2pf(ztk3, tquery, k2query);    // defaults to dimensionless
+    vis_toolkit::largest_u2_line<> u2line(tk3, tquery, k2query);
+    vis_toolkit::largest_u3_line<> u3line(tk3, tquery, k3query);
+    vis_toolkit::background_line<> hubble(tk3, tquery, vis_toolkit::background_quantity::Hubble);
 
+    vis_toolkit::time_series_table<> table("gelaton.utable", "utable.csv");
+    table += z2pf + u2line + u3line + hubble;
+    
+    vis_toolkit::index_selector<3> fsel(model->get_N_fields());
+    fsel.none().set_on({0,0,0}).set_on({1,1,1});
+    vis_toolkit::threepf_time_series<> tpf(tk3, fsel, tquery, k3query);
+    
+    vis_toolkit::time_series_plot<> plot("gelaton.threepf-fields", "threepf-fields.pdf");
+    plot += tpf;
+    
+    vis_toolkit::SQL_time_query tquery2("serial IN (SELECT MAX(serial) FROM time_samples)");
+    vis_toolkit::SQL_threepf_query k3query2("1=1");
+    
+    vis_toolkit::zeta_reduced_bispectrum_wavenumber_series<> fNL(ztk3, tquery2, k3query2);
+    
+    vis_toolkit::wavenumber_series_plot<> fNLplot("gelaton.fNL", "fNL.pdf");
+    fNLplot.set_log_x(true);
+    fNLplot += fNL;
+    
+    transport::output_task<> otk("gelaton.output");
+    otk += table + plot + fNLplot;
+
+    repo.commit(ztk2);
     repo.commit(ztk3);
+    repo.commit(otk);
   }
 
 
