@@ -32,25 +32,34 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
 
 void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
   {
-    const double M_P       = 1.0;
-    const double M_chi     = std::sqrt(10.0) * M_P;
-    const double epsilon_s = 10.0;
+    const double M_P           = 1.0;
+    const double P_zeta        = 1E-9;                                                          // desired amplitude of fluctuations
+    const double omega         = M_PI / 30.0;                                                   // try to get round pi radians in ~ 30 e-folds
+    
+    const double V0            = 0.1 * P_zeta * M_P*M_P*M_P*M_P;                                // adjust uplift to get sufficient inflation
+    const double eta_R         = 1.0/std::sqrt(3.0);                                            // adjust radial mass to be of order Hubble
+    const double g_R           = M_P*M_P / std::sqrt(V0);                                       // adjust radial cubic coupling to be of order Hubble
+    const double lambda_R      = 0.5 * M_P*M_P*M_P / std::pow(V0, 3.0/4.0) / std::sqrt(omega);  // adjust radial quartic coupling to dominate the displacement
+    
+    const double alpha         = 7.25*omega;                                                    // adjust angular tilt to get desired omega
+    
+    const double R0            = std::sqrt(V0/3.0) / (M_P * omega * std::sqrt(P_zeta));         // adjust radial minimum to give desired P_zeta normalization
+    
+    const double x_init        = -R0;
+    const double y_init        = (1E-2)*R0;
 
-    const double x_init    = -2.0 * M_P;
-    const double y_init    = 1E-4 * M_P;
-
-    const double N_init    = 0.0;
-    const double N_pre     = 8.0;
-    const double N_max     = 29.1;
-
-    transport::parameters<> params(M_P, { M_chi, epsilon_s }, model);
+    const double N_init        = 0.0;
+    const double N_pre         = 8.0;
+    const double N_max         = 28.0;
+    
+    transport::parameters<> params(M_P, { R0, V0, eta_R, g_R, lambda_R, alpha }, model);
     transport::initial_conditions<> ics("gelaton-shape", params, { x_init, y_init, 0.0, 0.0 }, N_init, N_pre);
 
     transport::basic_range<> times(N_init, N_max, 100, transport::spacing::linear);
 
 
 //    transport::basic_range<> ks(exp(0.0), exp(20.5), 500, transport::spacing::log_bottom);
-    transport::basic_range<> ks(4E5, 4E5, 0, transport::spacing::log_bottom);
+    transport::basic_range<> ks(exp(10.0), exp(10.0), 0, transport::spacing::log_bottom);
     transport::basic_range<> alphas(-0.98, 0.98, 98, transport::spacing::linear);
     transport::basic_range<> betas(0.0, 0.99, 99, transport::spacing::linear);
 
