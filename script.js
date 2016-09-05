@@ -1,0 +1,210 @@
+$(function(){
+    $('#button0').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag0"]').tab('show');
+    })
+});
+$(function(){
+    $('#button4').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag3"]').tab('show');
+    })
+});
+$(function(){
+    $('#button5').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag0"]').tab('show');
+    })
+});
+$(function(){
+    $('#button8').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button9').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button10').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag6"]').tab('show');
+    })
+});
+$(function(){
+    $('#button11').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag2"]').tab('show');
+    })
+});
+$(function(){
+    $('#button12').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button13').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag3"]').tab('show');
+    })
+});
+$(function(){
+    $('#button14').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag11"]').tab('show');
+    })
+});
+$(function(){
+    $('#button15').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag10"]').tab('show');
+    })
+});
+$(function(){
+    $('#button16').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag9"]').tab('show');
+    })
+});
+$(function(){
+    $('#button17').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag8"]').tab('show');
+    })
+});
+$(function(){
+    $('#button18').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag7"]').tab('show');
+    })
+});
+$(function(){
+    $('#button19').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag11"]').tab('show');
+    })
+});
+$(function(){
+    $('#button20').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag6"]').tab('show');
+    })
+});
+$(function(){
+    $('#button21').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button22').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag3"]').tab('show');
+    })
+});
+$(function(){
+    $('#button23').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button24').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag9"]').tab('show');
+    })
+});
+$(function(){
+    $('#button25').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag6"]').tab('show');
+    })
+});
+$(function(){
+    $('#button26').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button27').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag10"]').tab('show');
+    })
+});
+$(function(){
+    $('#button28').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag3"]').tab('show');
+    })
+});
+$(function(){
+    $('#button29').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button30').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button31').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button32').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button33').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button34').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
+$(function(){
+    $('#button35').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button36').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button37').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button38').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag1"]').tab('show');
+    })
+});
+$(function(){
+    $('#button39').click(function(e){
+        e.preventDefault();
+        $('#tabs').find('a[href="#tag4"]').tab('show');
+    })
+});
