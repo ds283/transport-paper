@@ -99,9 +99,10 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
     vis_toolkit::SQL_threepf_query k3query2("1=1");
     
     vis_toolkit::zeta_reduced_bispectrum_wavenumber_series<> fNL(ztk3, tquery2, k3query2);
+    fNL.set_current_x_axis_value(vis_toolkit::axis_value::efolds_exit);
     
     vis_toolkit::wavenumber_series_plot<> fNLplot("gelaton.fNL", "fNL.pdf");
-    fNLplot.set_log_x(true);
+    fNLplot.set_log_y(true);
     fNLplot += fNL;
     
     transport::output_task<> otk("gelaton.output");
