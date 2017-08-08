@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(transport-paper)
 
 
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/.cpptransport-packages/share/cmake/")
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "~/.cpptransport201701/share/cmake/")
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
