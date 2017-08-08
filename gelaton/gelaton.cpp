@@ -102,7 +102,7 @@ void write_tasks(transport::repository<>& repo, transport::gelaton_mpi<>* model)
     fNL.set_current_x_axis_value(vis_toolkit::axis_value::efolds_exit);
     
     vis_toolkit::wavenumber_series_plot<> fNLplot("gelaton.fNL", "fNL.pdf");
-    fNLplot.set_log_y(true);
+    fNLplot.set_log_y(false);
     fNLplot += fNL;
     
     transport::output_task<> otk("gelaton.output");
